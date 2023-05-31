@@ -1,11 +1,23 @@
+/**
+ * The PolynomialImpl class is an implementation of the Polynomial interface.
+ */
 public class PolynomialImpl implements Polynomial {
   private Node head;
 
+  /**
+   * The Node class represents a term in the polynomial.
+   */
   private static class Node {
     int coefficient;
     int power;
     Node next;
 
+    /**
+     * Constructs a new Node with the given coefficient and power.
+     *
+     * @param coefficient the coefficient of the term
+     * @param power       the power of the term
+     */
     Node(int coefficient, int power) {
       this.coefficient = coefficient;
       this.power = power;
@@ -14,19 +26,30 @@ public class PolynomialImpl implements Polynomial {
     // This is the implementation class PolynomialImpl that implements the Polynomial interface. It contains a private inner class Node to represent each term of the polynomial.
   }
 
+  /**
+   * Constructs an empty polynomial with no terms.
+   */
   public PolynomialImpl() {
     this.head = null;
   }
   // This is the constructor of PolynomialImpl that creates an empty polynomial with no terms. It initializes the head of the linked list representation to null.
 
-
+  /**
+   * Constructs a polynomial by parsing the given polynomial string.
+   *
+   * @param polynomialString the string representing the polynomial
+   */
   public PolynomialImpl(String polynomialString) {
     this.head = null;
     parsePolynomialString(polynomialString);
   }
   // This is the constructor of PolynomialImpl that takes a polynomial as a string, parses it, and creates the polynomial accordingly. It calls the parsePolynomialString method to process the string.
 
-
+  /**
+   * Parses the given polynomial string and adds the terms to the polynomial.
+   *
+   * @param polynomialString the string representing the polynomial
+   */
   private void parsePolynomialString(String polynomialString) {
     String[] terms = polynomialString.split("\\s+");
     for (String term : terms) {
@@ -46,7 +69,13 @@ public class PolynomialImpl implements Polynomial {
   }
   //This private method parsePolynomialString processes the input polynomial string. It splits the string into individual terms, and for each term, it further splits it into coefficient and power parts using the regular expression x\^. It handles the special cases where the coefficient is omitted or negative. Then, it calls the addTerm method to add the parsed term to the polynomial.
 
-
+  /**
+   * Adds a term with the given coefficient and power to the polynomial.
+   *
+   * @param coefficient the coefficient of the term
+   * @param power       the power of the term
+   * @throws IllegalArgumentException if the power is negative
+   */
   @Override
   public void addTerm(int coefficient, int power) {
     if (power < 0) {
@@ -74,7 +103,11 @@ public class PolynomialImpl implements Polynomial {
   }
   // This method addTerm adds a term with the given coefficient and power to the polynomial. It performs checks to ensure that the power is non-negative and the coefficient is not zero. It creates a new node representing the term and adds it to the linked list representation of the polynomial in descending order of powers.
 
-
+  /**
+   * Removes all terms with the given power from the polynomial.
+   *
+   * @param power the power of the terms to be removed
+   */
   @Override
   public void removeTerm(int power) {
     if (head == null) {
@@ -97,7 +130,11 @@ public class PolynomialImpl implements Polynomial {
   }
   //This method removeTerm removes all terms with the given power from the polynomial. It iterates through the linked list and removes the nodes that match the given power. It uses recursion to remove all matching terms.
 
-
+  /**
+   * Returns the degree of the polynomial.
+   *
+   * @return the degree of the polynomial
+   */
   @Override
   public int getDegree() {
     if (head == null) {
@@ -106,6 +143,12 @@ public class PolynomialImpl implements Polynomial {
     return head.power;
   }
 
+  /**
+   * Returns the coefficient of the term with the given power.
+   *
+   * @param power the power of the term
+   * @return the coefficient of the term with the given power
+   */
   @Override
   public int getCoefficient(int power) {
     Node curr = head;
@@ -119,7 +162,12 @@ public class PolynomialImpl implements Polynomial {
   }
   //This method getCoefficient returns the coefficient of the term with the given power. It iterates through the linked list and returns the coefficient if it finds a matching term. If the term doesn't exist, it returns 0.
 
-
+  /**
+   * Evaluates the polynomial for the given value of x.
+   *
+   * @param x the value of x
+   * @return the result of evaluating the polynomial
+   */
   @Override
   public double evaluate(double x) {
     double result = 0;
@@ -131,6 +179,13 @@ public class PolynomialImpl implements Polynomial {
     return result;
   }
 
+  /**
+   * Adds the given polynomial to the current polynomial and returns the result as a new polynomial.
+   *
+   * @param polynomial the polynomial to be added
+   * @return the sum of the two polynomials
+   * @throws IllegalArgumentException if the given polynomial is of an invalid type
+   */
   @Override
   public Polynomial add(Polynomial polynomial) {
     if (!(polynomial instanceof PolynomialImpl)) {
@@ -153,8 +208,17 @@ public class PolynomialImpl implements Polynomial {
         curr1 = curr1.next;
         curr2 = curr2.next;
       }
+      // Add any remaining terms from either polynomial
+      while (curr1 != null) {
+        sum.addTerm(curr1.coefficient, curr1.power);
+        curr1 = curr1.next;
+      }
+      while (curr2 != null) {
+        sum.addTerm(curr2.coefficient, curr2.power);
+        curr2 = curr2.next;
+      }
+      return sum;
     }
-
     return polynomial;
   }
 }

@@ -1,3 +1,6 @@
+/**
+ * The Polynomial interface defines the contract for operations on polynomials.
+ */
 public interface Polynomial {
   void addTerm(int coefficient, int power);
   void removeTerm(int power);
