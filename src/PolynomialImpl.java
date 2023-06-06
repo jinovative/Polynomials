@@ -16,7 +16,7 @@ public class PolynomialImpl implements Polynomial {
      * Constructs a new Node with the given coefficient and power.
      *
      * @param coefficient the coefficient of the term
-     * @param power       the power of the term
+     * @param power the power of the term
      */
     Node(int coefficient, int power) {
       this.coefficient = coefficient;
@@ -52,34 +52,41 @@ public class PolynomialImpl implements Polynomial {
    */
   private void parsePolynomialString(String polynomialString) {
     String[] terms = polynomialString.split("\\s+");
+
     for (String term : terms) {
       String[] parts = term.split("x\\^");
+      if (parts.length != 2) {
+        continue; // Skip invalid term
+      }
+
       int coefficient;
       int power;
       if (parts[0].isEmpty()) {
         coefficient = 1;
-      } else if (parts[0].equals("-")) {
-        coefficient = -1;
+      } else if (parts[0].equals("+") || parts[0].equals("-")) {
+        coefficient = Integer.parseInt(parts[0] + "1");
       } else {
         coefficient = Integer.parseInt(parts[0]);
       }
+
       power = Integer.parseInt(parts[1]);
       addTerm(coefficient, power);
     }
   }
+
   //This private method parsePolynomialString processes the input polynomial string. It splits the string into individual terms, and for each term, it further splits it into coefficient and power parts using the regular expression x\^. It handles the special cases where the coefficient is omitted or negative. Then, it calls the addTerm method to add the parsed term to the polynomial.
 
   /**
    * Adds a term with the given coefficient and power to the polynomial.
    *
    * @param coefficient the coefficient of the term
-   * @param power       the power of the term
+   * @param power the power of the term
    * @throws IllegalArgumentException if the power is negative
    */
   @Override
   public void addTerm(int coefficient, int power) {
     if (power < 0) {
-      throw new IllegalArgumentException("Power cannot be negative");
+      throw new IllegalArgumentException("Invalid input");
     }
     if (coefficient == 0) {
       return; // Ignore terms with zero coefficient
