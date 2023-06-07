@@ -23,7 +23,7 @@ public class PolynomialImpl implements Polynomial {
       this.power = power;
       this.next = null;
     }
-    // This is the implementation class PolynomialImpl that implements the Polynomial interface. It contains a private inner class Node to represent each term of the polynomial.
+
   }
 
   /**
@@ -32,7 +32,6 @@ public class PolynomialImpl implements Polynomial {
   public PolynomialImpl() {
     this.head = null;
   }
-  // This is the constructor of PolynomialImpl that creates an empty polynomial with no terms. It initializes the head of the linked list representation to null.
 
   /**
    * Constructs a polynomial by parsing the given polynomial string.
@@ -43,7 +42,6 @@ public class PolynomialImpl implements Polynomial {
     this.head = null;
     parsePolynomialString(polynomialString);
   }
-  // This is the constructor of PolynomialImpl that takes a polynomial as a string, parses it, and creates the polynomial accordingly. It calls the parsePolynomialString method to process the string.
 
   /**
    * Parses the given polynomial string and adds the terms to the polynomial.
@@ -73,8 +71,6 @@ public class PolynomialImpl implements Polynomial {
       addTerm(coefficient, power);
     }
   }
-
-  //This private method parsePolynomialString processes the input polynomial string. It splits the string into individual terms, and for each term, it further splits it into coefficient and power parts using the regular expression x\^. It handles the special cases where the coefficient is omitted or negative. Then, it calls the addTerm method to add the parsed term to the polynomial.
 
   /**
    * Adds a term with the given coefficient and power to the polynomial.
@@ -108,7 +104,7 @@ public class PolynomialImpl implements Polynomial {
       }
     }
   }
-  // This method addTerm adds a term with the given coefficient and power to the polynomial. It performs checks to ensure that the power is non-negative and the coefficient is not zero. It creates a new node representing the term and adds it to the linked list representation of the polynomial in descending order of powers.
+
 
   /**
    * Removes all terms with the given power from the polynomial.
@@ -135,7 +131,6 @@ public class PolynomialImpl implements Polynomial {
       }
     }
   }
-  //This method removeTerm removes all terms with the given power from the polynomial. It iterates through the linked list and removes the nodes that match the given power. It uses recursion to remove all matching terms.
 
   /**
    * Returns the degree of the polynomial.
@@ -167,7 +162,7 @@ public class PolynomialImpl implements Polynomial {
     }
     return 0; // Coefficient of a term that doesn't exist is 0
   }
-  //This method getCoefficient returns the coefficient of the term with the given power. It iterates through the linked list and returns the coefficient if it finds a matching term. If the term doesn't exist, it returns 0.
+
 
   /**
    * Evaluates the polynomial for the given value of x.
@@ -227,5 +222,80 @@ public class PolynomialImpl implements Polynomial {
       return sum;
     }
     return polynomial;
+  }
+
+  /**
+   *
+   * @return
+   */
+  @Override
+  public String toString() {
+    if (head == null) {
+      return "0"; // Return "0" for the zero polynomial
+    }
+
+    StringBuilder sb = new StringBuilder();
+    Node curr = head;
+    while (curr != null) {
+      if (curr.coefficient == 0) {
+        curr = curr.next;
+        continue;
+      }
+
+      if (sb.length() > 0 && curr.coefficient > 0) {
+        sb.append("+"); // Add "+" between terms
+      }
+
+      if (curr.coefficient < 0) {
+        sb.append("-"); // Add "-" for negative coefficients
+      }
+
+      int absCoefficient = Math.abs(curr.coefficient);
+      if (absCoefficient != 1 || curr.power == 0) {
+        sb.append(absCoefficient); // Add coefficient (unless it's 1 and the power is not 0)
+      }
+
+      if (curr.power > 0) {
+        sb.append("x");
+        if (curr.power > 1) {
+          sb.append("^").append(curr.power); // Add power (if it's greater than 1)
+        }
+      }
+
+      curr = curr.next;
+    }
+
+    return sb.toString();
+  }
+}
+class PolynomialExample {
+  public static void main(String[] args) {
+    // Create a polynomial by parsing a string
+    String polynomialString = "3x^2 + 2x^3 - 5x^1 + 4";
+    PolynomialImpl polynomial = new PolynomialImpl(polynomialString);
+
+    // Evaluate the polynomial for a given value of x
+    double x = 2.5;
+    double result = polynomial.evaluate(x);
+    System.out.println("Result of evaluating the polynomial for x = " + x + ": " + result);
+
+    // Add another polynomial to the current polynomial
+    PolynomialImpl otherPolynomial = new PolynomialImpl("2x^3 - 5x^2 + 1");
+    PolynomialImpl sum = (PolynomialImpl) polynomial.add(otherPolynomial);
+    System.out.println("Sum of the two polynomials: " + sum.toString());
+
+    // Remove terms with a specific power from the polynomial
+    int powerToRemove = 2;
+    polynomial.removeTerm(powerToRemove);
+    System.out.println("Polynomial after removing terms with power " + powerToRemove + ": " + polynomial.toString());
+
+    // Get the degree of the polynomial
+    int degree = polynomial.getDegree();
+    System.out.println("Degree of the polynomial: " + degree);
+
+    // Get the coefficient of a term with a specific power
+    int power = 3;
+    int coefficient = polynomial.getCoefficient(power);
+    System.out.println("Coefficient of the term with power " + power + ": " + coefficient);
   }
 }
